@@ -9,22 +9,25 @@ function App() {
   return (
     <div className="App">
       <Layout>
-        <Switch>
-          <Route exact path="/">
-            <Home />
-          </Route>
-          <Route exact path="/event/:id">
-            <Event />
-          </Route>
-          <Route exact path="/create-event">
-            <CreateEvent />
-          </Route>
-          <Route>
-            <NotFound />
-          </Route>
-        </Switch>
+        <div className="main-content">
+          <Switch>
+            <Route exact path="/">
+              <Home />
+            </Route>
+            <Route exact path="/event/:id">
+              <Event />
+            </Route>
+            <Route exact path="/create-event">
+              <CreateEvent />
+            </Route>
+            <Route>
+              <NotFound />
+            </Route>
+          </Switch>
+        </div>
       </Layout>
     </div>
   );
 }
+
 export default App;

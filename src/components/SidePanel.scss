@@ -1,0 +1,13 @@
+.side-panel {
+    /* Position the side panel */
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 200px;
+    background-color: #f1f1f1;
+    z-index: 1;
+    overflow-x: hidden;
+    /* Add padding to the main content to avoid overlapping */
+    padding-left: 200px;
+}

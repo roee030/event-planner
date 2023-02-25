@@ -1,8 +1,27 @@
 import React, { useState, useEffect } from 'react';
-import { FormControl, InputLabel, MenuItem, Select, TextField } from "@material-ui/core";
+import {
+    FormControl,
+    InputLabel,
+    MenuItem,
+    Select,
+    TextField,
+    Button,
+    makeStyles,
+} from "@material-ui/core";
 import productList from "../data/productsData.json";
+const useStyles = makeStyles((theme) => ({
+    formControl: {
+        minWidth: 300,
+        marginBottom: theme.spacing(2),
+    },
+    textField: {
+        marginBottom: theme.spacing(2),
+    },
+}));
 
 function AddProductForm({ onProductAdd }) {
+    const classes = useStyles();
+
     const [productName, setProductName] = useState("");
     const [productPrice, setProductPrice] = useState("");
     const [selectedProductId, setSelectedProductId] = useState("");
@@ -53,7 +72,7 @@ function AddProductForm({ onProductAdd }) {
     };
     return (
         <form onSubmit={handleSubmit}>
-            <FormControl>
+            <FormControl className={classes.formControl}>
                 <InputLabel id="product-select-label">Product</InputLabel>
                 <Select
                     labelId="product-select-label"
@@ -78,6 +97,7 @@ function AddProductForm({ onProductAdd }) {
                         value={productName}
                         onChange={handleProductNameChange}
                         margin="normal"
+                        className={classes.textField}
                     />
                     <TextField
                         label="Price"
@@ -85,10 +105,13 @@ function AddProductForm({ onProductAdd }) {
                         value={productPrice}
                         onChange={handleProductPriceChange}
                         margin="normal"
+                        className={classes.textField}
                     />
                 </>
             )}
-            <button type="submit">Add</button>
+            <Button variant="contained" color="primary" type="submit">
+                Add
+            </Button>
         </form>
     );
 };
