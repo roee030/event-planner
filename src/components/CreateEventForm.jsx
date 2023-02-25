@@ -1,6 +1,24 @@
 import React, { useState } from 'react';
+import { makeStyles } from '@material-ui/core/styles';
+import TextField from '@material-ui/core/TextField';
+import Button from '@material-ui/core/Button';
+import IconButton from '@material-ui/core/IconButton';
+import DeleteIcon from '@material-ui/icons/Delete';
 
+const useStyles = makeStyles((theme) => ({
+    root: {
+        '& > *': {
+            margin: theme.spacing(1),
+            width: '25ch',
+        },
+    },
+    button: {
+        margin: theme.spacing(1),
+    },
+}));
 function CreateEventForm() {
+    const classes = useStyles();
+
     const [groceries, setGroceries] = useState([]);
     const [product, setProduct] = useState('');
     const [price, setPrice] = useState('');

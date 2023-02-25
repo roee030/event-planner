@@ -1,0 +1,146 @@
+[
+  {
+    "id": "1a2c8b7f-19e6-40b6-bf0c-308e6db797b6",
+    "category": "Food",
+    "name": "Cheese Platter",
+    "price": 250
+  },
+  {
+    "id": "dd5f7b1c-70f7-46f8-bde8-7f52a2c54c34",
+    "category": "Food",
+    "name": "Mini Quiches",
+    "price": 100
+  },
+  {
+    "id": "b96c8aeb-4a4d-4d51-a441-c7388b7f6b06",
+    "category": "Food",
+    "name": "Vegetable Platter",
+    "price": 150
+  },
+  {
+    "id": "d57e7886-7f07-4a4a-b51b-0df47b277a8b",
+    "category": "Food",
+    "name": "Fruit Salad",
+    "price": 200
+  },
+  {
+    "id": "9d4327a5-0321-4e04-8d47-1ee832836a77",
+    "category": "Food",
+    "name": "Sandwiches",
+    "price": 120
+  },
+  {
+    "id": "f5b7d857-2a2d-471b-bf56-79da15da40f3",
+    "category": "Food",
+    "name": "Pizza",
+    "price": 200
+  },
+  {
+    "id": "cc61ab7e-9cd9-4f79-b10b-c8af7c0312c2",
+    "category": "Food",
+    "name": "Sushi",
+    "price": 300
+  },
+  {
+    "id": "11f1404e-4c4b-40fc-9c10-68877fc03e3a",
+    "category": "Beverages",
+    "name": "Coffee",
+    "price": 10
+  },
+  {
+    "id": "d244f15c-19c3-4d7d-b3b1-e39f9a9fbf8f",
+    "category": "Beverages",
+    "name": "Tea",
+    "price": 10
+  },
+  {
+    "id": "f0d34e7d-722b-44cb-8a90-d1a17e26e9c9",
+    "category": "Beverages",
+    "name": "Soft Drinks",
+    "price": 15
+  },
+  {
+    "id": "e3e3d3f6-fb08-406c-b6a2-6b2ef6c9a2e9",
+    "category": "Beverages",
+    "name": "Lemonade",
+    "price": 20
+  },
+  {
+    "id": "835a1543-7b19-4c77-8d8e-65f6f08223ee",
+    "category": "Beverages",
+    "name": "Iced Tea",
+    "price": 20
+  },
+  {
+    "id": "1a2c8b7f-19e6-40b6-bf0c-338e6db797b6",
+    "category": "Drinks",
+    "name": "Assorted soft drinks",
+    "price": 70
+  },
+  {
+    "id": "2cb3a8d6-c17e-4b29-ba09-236660b7f9d1",
+    "category": "Drinks",
+    "name": "Lemonade",
+    "price": 50
+  },
+  {
+    "id": "ab75f18e-8c35-4682-9c58-153c70a2608e",
+    "category": "Drinks",
+    "name": "Fruit punch",
+    "price": 60
+  },
+  {
+    "id": "a24d9d9c-7ee0-41db-a5a5-5b5d5a80f3fd",
+    "category": "Drinks",
+    "name": "Iced tea",
+    "price": 40
+  },
+  {
+    "id": "6f47fb6a-9f7b-4f13-8784-d14125d4aa6d",
+    "category": "Drinks",
+    "name": "Coffee",
+    "price": 50
+  },
+  {
+    "id": "f7b8616d-c352-4949-a6a4-24c426e1f76b",
+    "category": "Drinks",
+    "name": "Tea",
+    "price": 40
+  },
+  {
+    "id": "d16ee3f6-dfc1-4fcf-98fc-cc15fca2edf9",
+    "category": "Snacks",
+    "name": "Mixed nuts",
+    "price": 30
+  },
+  {
+    "id": "df9d529c-8d1a-48c5-a7a5-0b2a542edebb",
+    "category": "Snacks",
+    "name": "Chips",
+    "price": 20
+  },
+  {
+    "id": "c7141a50-9b1c-471d-b282-0742f6b418e6",
+    "category": "Snacks",
+    "name": "Popcorn",
+    "price": 15
+  },
+  {
+    "id": "f00cc744-518c-4162-a9f9-4d2d7914f32f",
+    "category": "Snacks",
+    "name": "Pretzels",
+    "price": 25
+  },
+  {
+    "id": "098f29d8-2e2d-4330-ba22-65d5d5db5c5a",
+    "category": "Snacks",
+    "name": "Mini hot dogs",
+    "price": 80
+  },
+  {
+    "id": "aeed69df-3e0d-4cf1-9eb9-56a98876d843",
+    "category": "Snacks",
+    "name": "Mini pizzas",
+    "price": 100
+  }
+]
