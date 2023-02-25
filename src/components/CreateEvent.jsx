@@ -26,10 +26,17 @@ function CreateEvent() {
         handleNext();
     };
 
-    const handleProductAdd = (newProducts) => {
-        console.log("handleProductAdd - CreateEvent");
-        setProducts(newProducts);
+    const handleProductAdd = (newProduct) => {
+        const productIndex = products.findIndex((product) => product.id === newProduct.id);
+        if (productIndex !== -1) {
+            const newProducts = [...products];
+            newProducts[productIndex].quantity += 1;
+            setProducts(newProducts);
+        } else {
+            setProducts([...products, { ...newProduct, quantity: 1 }]);
+        }
     };
+
 
 
 
@@ -100,6 +107,7 @@ function CreateEvent() {
                         <ProductList
                             products={products}
                             onProductAdd={handleProductAdd}
+                            setProducts={setProducts}
                             onRemoveProduct={handleProductDelete} />
                         <AddProductForm
                             onProductAdd={handleProductAdd}
