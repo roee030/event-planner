@@ -5,6 +5,7 @@ import ProductList from './ProductList';
 import AddProductForm from './AddProductForm';
 import EventSummary from './EventSummary';
 import EventDetailsForm from './EventDetailsForm';
+import EventConfirmation from './EventConfirmation';
 
 function CreateEvent() {
     const [activeStep, setActiveStep] = useState(0);
@@ -17,6 +18,8 @@ function CreateEvent() {
         products: []
     });
 
+
+
     const handleNext = () => {
         setActiveStep(activeStep + 1);
     };
@@ -25,10 +28,10 @@ function CreateEvent() {
         setActiveStep(activeStep - 1);
     };
 
-    // const handleEventDetailsSubmit = (event) => {
-    //     event.preventDefault();
-    //     handleNext();
-    // };
+    const handleEventDetailsSubmit = (event) => {
+        event.preventDefault();
+        setActiveStep(activeStep + 1);
+    };
 
     const handleProductAdd = (newProduct) => {
         const productIndex = state.products.findIndex(
@@ -50,7 +53,7 @@ function CreateEvent() {
     };
 
 
-    const steps = ['Event Details', 'Products', 'Event Summary'];
+    const steps = ['Event Details', 'Products', 'Event Summary', 'Event Confirmation'];
 
     const getStepContent = (stepIndex) => {
         switch (stepIndex) {
@@ -77,7 +80,14 @@ function CreateEvent() {
                 return (
                     <EventSummary
                         state={state}
-                        onBackClick={handleBack} />
+                        onBackClick={handleBack}
+                        onSubmit={handleEventDetailsSubmit}
+                    />
+
+                );
+            case 3:
+                return (
+                    <EventConfirmation />
                 );
             default:
                 return 'Unknown stepIndex';

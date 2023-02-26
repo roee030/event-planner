@@ -17,6 +17,9 @@ function App() {
             <Route exact path="/event/:id">
               <Event />
             </Route>
+            <Route exact path="/event">
+              <Event />
+            </Route>
             <Route exact path="/create-event">
               <CreateEvent />
             </Route>

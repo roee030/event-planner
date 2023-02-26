@@ -1,8 +1,8 @@
 import React from "react";
 import { Typography, Box, Button, Grid } from "@material-ui/core";
 
-const EventSummary = ({ state, onBackClick }) => {
-    console.log(state);
+const EventSummary = ({ state, onBackClick, onSubmit }) => {
+
     return (
         <Box m={2}>
             <Typography variant="h4" component="h2" gutterBottom>
@@ -47,7 +47,7 @@ const EventSummary = ({ state, onBackClick }) => {
                 <Button variant="contained" color="primary" onClick={onBackClick}>
                     Back
                 </Button>
-                <Button variant="contained" color="primary">
+                <Button variant="contained" color="primary" onClick={onSubmit}>
                     Create Event
                 </Button>
             </Box>
