@@ -105,7 +105,13 @@ const GuestEventPage = ({ event }) => {
                     {event.products.map((product) => {
                         const { id, name, quantity } = product;
                         const selectedQuantity = selectedProducts[id] || 0;
-                        const isMaxQuantityReached = selectedQuantity >= quantity;
+                        const attendeeQuantities = event.attendees.map((attendee) => {
+                            const attendeeProduct = attendee.products.find((p) => p.productId === id);
+                            return attendeeProduct ? attendeeProduct.quantity : 0;
+                        });
+                        const totalAttendeeQuantity = attendeeQuantities.reduce((a, b) => a + b, 0);
+                        const maxQuantity = quantity - totalAttendeeQuantity;
+                        const isMaxQuantityReached = selectedQuantity >= maxQuantity;
                         const isMinQuantityReached = selectedQuantity <= 0;
 
                         return (
@@ -136,7 +142,6 @@ const GuestEventPage = ({ event }) => {
                                                 handleProductChange(id, selectedQuantity + 1);
                                             }}
                                             disabled={isMaxQuantityReached}
-
                                         >
                                             <AddIcon fontSize="small" />
                                         </IconButton>
@@ -149,6 +154,11 @@ const GuestEventPage = ({ event }) => {
                                         </Typography>
                                     </Grid>
                                 )}
+                                <Grid item xs={12}>
+                                    <Typography variant="caption">
+                                        {maxQuantity} {name} available
+                                    </Typography>
+                                </Grid>
                             </Grid>
                         );
                     })}
