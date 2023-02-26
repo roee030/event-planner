@@ -2,8 +2,8 @@ import { Switch, Route } from 'react-router-dom';
 import Home from './route/Home';
 import Event from './route/Event';
 import Layout from './Layout';
-import CreateEvent from './components/CreateEvent';
-import NotFound from './components/NotFound';
+import CreateEvent from './components/create-event/CreateEvent';
+import NotFound from './route/NotFound';
 
 function App() {
   return (

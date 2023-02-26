@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 
 import { Stepper, Step, StepLabel, Button, Typography } from '@material-ui/core';
-import ProductList from './ProductList';
-import AddProductForm from './AddProductForm';
-import EventSummary from './EventSummary';
-import EventDetailsForm from './EventDetailsForm';
-import EventConfirmation from './EventConfirmation';
+import ProductList from './stepper/ProductList';
+import AddProductForm from './stepper/AddProductForm';
+import EventSummary from './stepper/EventSummary';
+import EventDetailsForm from './stepper/EventDetailsForm';
+import EventConfirmation from './stepper/EventConfirmation';
 
 function CreateEvent() {
     const [activeStep, setActiveStep] = useState(0);

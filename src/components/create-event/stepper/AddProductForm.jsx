@@ -8,7 +8,7 @@ import {
     Button,
     makeStyles,
 } from "@material-ui/core";
-import productList from "../data/productsData.json";
+import productList from "../../../data/productsData.json";
 const useStyles = makeStyles((theme) => ({
     formControl: {
         minWidth: 300,

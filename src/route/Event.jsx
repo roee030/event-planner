@@ -1,5 +1,5 @@
 import React from 'react';
-import GuestEventPage from '../components/GuestEventPage';
+import GuestEventPage from './GuestEventPage';
 
 const Event = () => {
     const event = {
@@ -9,7 +9,7 @@ const Event = () => {
         numberOfGuests: 6,
         location: "123 Main St, Anytown, USA",
         products: [
-            { id: 1, name: "Chips", price: 5, quantity: 10 },
+            { id: 1, name: "Chips", price: 5, quantity: 3 },
             { id: 2, name: "Soda", price: 5, quantity: 2 },
             { id: 3, name: "Pizza", price: 10, quantity: 6 },
             { id: 4, name: "Beer", price: 3, quantity: 8 },

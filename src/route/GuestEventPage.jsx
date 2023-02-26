@@ -36,6 +36,7 @@ const useStyles = makeStyles((theme) => ({
 const GuestEventPage = ({ event }) => {
     const classes = useStyles();
     const [selectedProducts, setSelectedProducts] = useState({});
+    const [productsExceedingQuantity, setProductsExceedingQuantity] = useState([]);
 
     useEffect(() => {
         if (event) {
@@ -47,12 +48,27 @@ const GuestEventPage = ({ event }) => {
         }
     }, [event]);
 
+    useEffect(() => {
+        const tempProductsExceedingQuantity = [];
+        event.products.forEach((product) => {
+            const selectedQuantity = selectedProducts[product.id] || 0;
+            if (selectedQuantity > 0 && selectedQuantity + product.quantity > event.numberOfGuests) {
+                tempProductsExceedingQuantity.push(product.id);
+            }
+        });
+        setProductsExceedingQuantity(tempProductsExceedingQuantity);
+    }, [selectedProducts]);
+
     const isMaxQuantityReached = (productId, quantity) => {
         const product = event.products.find((product) => product.id === productId);
         const selectedQuantity = selectedProducts[productId] || 0;
         return selectedQuantity + quantity > product.quantity;
     };
 
+    const canConfirm = () => {
+        const totalSelected = Object.values(selectedProducts).reduce((total, quantity) => total + quantity, 0);
+        return totalSelected >= event.numberOfGuests && productsExceedingQuantity.length === 0;
+    };
 
     const handleProductChange = (productId, quantity) => {
         setSelectedProducts((prevState) => ({
@@ -70,14 +86,11 @@ const GuestEventPage = ({ event }) => {
         return totalPrice.toFixed(2);
     };
 
-
     const handleRSVP = () => {
         // calculate total price
         const totalPrice = calculateTotalPrice(event.products, selectedProducts);
         console.log("RSVP clicked", selectedProducts, totalPrice);
     };
-
-
 
     return (
         <Paper className={classes.root}>
@@ -91,11 +104,6 @@ const GuestEventPage = ({ event }) => {
                     </Typography>
                     <Typography variant="subtitle1">
                         Location: {event.location}
-                    </Typography>
-                </Grid>
-                <Grid item xs={12} md={6}>
-                    <Typography variant="subtitle1" align="right">
-                        Price: ${event.price}
                     </Typography>
                 </Grid>
             </Grid>
