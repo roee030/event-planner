@@ -6,15 +6,18 @@ import AddProductForm from './stepper/AddProductForm';
 import EventSummary from './stepper/EventSummary';
 import EventDetailsForm from './stepper/EventDetailsForm';
 import EventConfirmation from './stepper/EventConfirmation';
+import axios from 'axios';
 
 function CreateEvent() {
     const [activeStep, setActiveStep] = useState(0);
+    const [loading, setLoading] = useState(false);
+    const [eventId, setEventId] = useState('');
+    const [isError, setIsError] = useState(false);
     const [state, setState] = useState({
-        eventName: '',
-        eventLocation: '',
-        eventDate: '',
-        eventTime: '',
-        guestNumber: 0,
+        title: '',
+        location: '',
+        date: '',
+        numberOfGuests: 0,
         products: []
     });
 
@@ -27,9 +30,20 @@ function CreateEvent() {
     const handleBack = () => {
         setActiveStep(activeStep - 1);
     };
-
-    const handleEventDetailsSubmit = (event) => {
-        event.preventDefault();
+    const handleCreateEvent = async (eventData) => {
+        setLoading(true);
+        try {
+            const response = await axios.post('http://localhost:3000/event', eventData);
+            setEventId(response.data._id);
+            setLoading(false);
+        } catch (err) {
+            setIsError(true);
+            setLoading(false);
+        }
+    };
+    const handleEventDetailsSubmit = async () => {
+        console.log(state);
+        await handleCreateEvent(state);
         setActiveStep(activeStep + 1);
     };
 
@@ -87,7 +101,7 @@ function CreateEvent() {
                 );
             case 3:
                 return (
-                    <EventConfirmation />
+                    <EventConfirmation loading={loading} eventId={eventId} />
                 );
             default:
                 return 'Unknown stepIndex';
