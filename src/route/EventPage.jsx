@@ -16,6 +16,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import axios from "axios";
 import { blue, green, orange, purple, red } from "@material-ui/core/colors";
 import { deepOrange } from "@material-ui/core/colors";
+import { useHistory } from 'react-router-dom';
 
 function trimText(text) {
     if (!text || !text.length) {
@@ -71,6 +72,7 @@ const useStyles = makeStyles((theme) => ({
 const EventPage = ({ currentUser }) => {
     const { id } = useParams();
     const classes = useStyles();
+    const history = useHistory();
     const [event, setEvent] = useState(null);
     const [selectedProducts, setSelectedProducts] = useState({});
     const [error, setError] = useState(null);
@@ -147,39 +149,48 @@ const EventPage = ({ currentUser }) => {
         return (totalPrice > pricePerUser);
     };
     const handleSubmit = async () => {
-
         try {
-            const existingAttendeeIndex = event.attendees.findIndex((attendee) => attendee._id === currentUser.id);
+            const existingAttendeeIndex = event.attendees.findIndex(
+                attendee => attendee._id === currentUser.id
+            );
             const updatedAttendees = [...event.attendees];
 
             if (existingAttendeeIndex !== -1) {
                 // Update existing attendee's products array
-                updatedAttendees[existingAttendeeIndex].products = Object.keys(selectedProducts).map((productId) => ({
+                updatedAttendees[existingAttendeeIndex].products = Object.keys(
+                    selectedProducts
+                ).map(productId => ({
                     productId,
-                    quantity: selectedProducts[productId],
+                    quantity: selectedProducts[productId]
                 }));
             } else {
                 // Add new attendee with selected products array
                 updatedAttendees.push({
                     _id: currentUser.id,
                     name: currentUser.username,
-                    products: Object.keys(selectedProducts).map((productId) => ({
+                    products: Object.keys(selectedProducts).map(productId => ({
                         productId,
-                        quantity: selectedProducts[productId],
-                    })),
+                        quantity: selectedProducts[productId]
+                    }))
                 });
             }
 
             const updatedEvent = {
                 ...event,
-                attendees: updatedAttendees,
+                attendees: updatedAttendees
             };
 
+            // Make a PUT request to update the event
             await axios.put(`http://localhost:3000/event/${id}`, updatedEvent);
-            alert("event updated");
+
+            // Make a PUT request to add the event to the user's event list
+            await axios.put(
+                `http://localhost:3000/user/${currentUser._id}/event/${event._id}`
+            );
+            history.push('/events');
         } catch (error) {
             console.error(error);
-            alert("An error occurred");
+            alert('An error occurred while adding the event to your list.');
         }
     };
 

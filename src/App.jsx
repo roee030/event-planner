@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
 import { Switch, Route, useHistory } from 'react-router-dom';
 import Home from './route/Home';
-import Event from './route/Event';
+import Events from './route/Events';
+import EventPage from './route/EventPage';
 import Layout from './Layout';
 import CreateEvent from './components/create-event/CreateEvent';
 import NotFound from './route/NotFound';
@@ -46,10 +47,10 @@ function App() {
               <Home />
             </Route>
             <Route exact path="/event/:id">
-              <Event user={user} />
+              <EventPage currentUser={user} />
             </Route>
-            <Route exact path="/event">
-              <Event user={user} />
+            <Route exact path="/events">
+              <Events user={user} />
             </Route>
             <Route exact path="/create-event">
               <CreateEvent />
