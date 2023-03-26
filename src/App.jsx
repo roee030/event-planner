@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Switch, Route, useHistory } from 'react-router-dom';
+import { Switch, Route, useHistory, Redirect } from 'react-router-dom';
 import Home from './route/Home';
 import Events from './route/Events';
 import EventPage from './route/EventPage';
@@ -10,11 +10,23 @@ import Login from './route/Login';
 import Signup from './route/Signup';
 import axios from 'axios';
 
+function PrivateRoute({ component: Component, isAuthenticated, ...rest }) {
+  return (
+    <Route
+      {...rest}
+      render={(props) =>
+        isAuthenticated ? <Component {...props}  {...rest} /> : <Redirect to="/login" />
+      }
+    />
+  );
+}
+
 
 function App() {
   const history = useHistory();
 
   const [user, setUser] = useState(JSON.parse(localStorage.getItem('user')) || null);
+  const [isAuthenticated, setIsAuthenticated] = useState(user || false);
 
   useEffect(() => {
     const authToken = localStorage.getItem('authToken');
@@ -27,6 +39,7 @@ function App() {
       })
         .then(response => {
           setUser({ ...user, ...response.data.user });
+          setIsAuthenticated(true); // set isAuthenticated to true
         })
         .catch(error => {
           console.log(error);
@@ -40,7 +53,7 @@ function App() {
 
   return (
     <div className="App">
-      <Layout>
+      <Layout user={user} setUser={setUser}>
         <div className="main-content">
           <Switch>
             <Route exact path="/">
@@ -49,12 +62,21 @@ function App() {
             <Route exact path="/event/:id">
               <EventPage currentUser={user} />
             </Route>
-            <Route exact path="/events">
-              <Events user={user} />
-            </Route>
-            <Route exact path="/create-event">
-              <CreateEvent />
-            </Route>
+
+            <PrivateRoute
+              exact
+              path="/create-event"
+              component={CreateEvent}
+              isAuthenticated={isAuthenticated}
+              user={user}
+            />
+            <PrivateRoute
+              exact
+              path="/events"
+              component={Events}
+              isAuthenticated={isAuthenticated}
+              user={user}
+            />
             <Route exact path="/login">
               <Login />
             </Route>

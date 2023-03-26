@@ -19,6 +19,7 @@ export default function Signup() {
     const history = useHistory();
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
+    const [email, setEmail] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const [error, setError] = useState('');
 
@@ -29,7 +30,7 @@ export default function Signup() {
             return;
         }
 
-        axios.post('http://localhost:3000/auth/signup', { username, password })
+        axios.post('http://localhost:3000/auth/signup', { username, password, email })
             .then(() => {
                 history.push('/');
             })
@@ -57,6 +58,19 @@ export default function Signup() {
                         autoFocus
                         value={username}
                         onChange={(event) => setUsername(event.target.value)}
+                    />
+                    <TextField
+                        variant="outlined"
+                        margin="normal"
+                        required
+                        fullWidth
+                        id="email"
+                        label="Email"
+                        name="email"
+                        autoComplete="email"
+                        autoFocus
+                        value={email}
+                        onChange={(event) => setEmail(event.target.value)}
                     />
                     <TextField
                         variant="outlined"

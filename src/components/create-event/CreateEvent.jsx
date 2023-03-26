@@ -8,7 +8,7 @@ import EventDetailsForm from './stepper/EventDetailsForm';
 import EventConfirmation from './stepper/EventConfirmation';
 import axios from 'axios';
 
-function CreateEvent() {
+function CreateEvent({ user }) {
     const [activeStep, setActiveStep] = useState(0);
     const [loading, setLoading] = useState(false);
     const [eventId, setEventId] = useState('');
@@ -33,7 +33,7 @@ function CreateEvent() {
     const handleCreateEvent = async (eventData) => {
         setLoading(true);
         try {
-            const response = await axios.post('http://localhost:3000/event', eventData);
+            const response = await axios.post('http://localhost:3000/event', { ...eventData, user: user });
             setEventId(response.data._id);
             setLoading(false);
         } catch (err) {
@@ -42,7 +42,6 @@ function CreateEvent() {
         }
     };
     const handleEventDetailsSubmit = async () => {
-        console.log(state);
         await handleCreateEvent(state);
         setActiveStep(activeStep + 1);
     };

@@ -1,8 +1,10 @@
 import { useState } from 'react';
-import { AppBar, Drawer, IconButton, List, ListItem, ListItemIcon, ListItemText, Toolbar, Typography } from '@material-ui/core';
+import { AppBar, Drawer, IconButton, List, ListItem, ListItemIcon, ListItemText, Toolbar, Typography, Button } from '@material-ui/core';
 import { Menu as MenuIcon, Close as CloseIcon, Home as HomeIcon, Event as EventIcon, Add as AddIcon } from '@material-ui/icons';
 import { makeStyles } from '@material-ui/core/styles';
 import { Link, useLocation } from 'react-router-dom';
+import axios from 'axios';
+import { useHistory } from 'react-router-dom';
 
 const drawerWidth = 240;
 const useStyles = makeStyles((theme) => ({
@@ -14,9 +16,7 @@ const useStyles = makeStyles((theme) => ({
     },
     menuButton: {
         marginRight: theme.spacing(2),
-        [theme.breakpoints.up('md')]: {
-            display: 'none',
-        },
+
     },
     drawer: {
         width: drawerWidth,
@@ -42,14 +42,29 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-function Layout({ children }) {
-    const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+function Layout({ user, setUser, children }) {
     const classes = useStyles();
+    const history = useHistory();
     const location = useLocation();
     const [open, setOpen] = useState(false);
 
     const handleDrawerToggle = () => {
         setOpen(!open);
+    };
+    const logout = () => {
+        axios.get('http://localhost:3000/auth/logout')
+            .then(() => {
+                // Remove token from local storage
+                localStorage.removeItem('authToken');
+                localStorage.removeItem('user');
+                setUser(null);
+            })
+            .catch((error) => {
+                console.error(error);
+            });
+
+        history.push('/login');
+
     };
 
     const drawer = (
@@ -68,6 +83,10 @@ function Layout({ children }) {
                     <ListItemIcon><AddIcon /></ListItemIcon>
                     <ListItemText primary="Create Event" />
                 </ListItem>
+                <ListItem button component={Link} to="/events" selected={location.pathname === '/events'}>
+                    <ListItemIcon><EventIcon /></ListItemIcon>
+                    <ListItemText primary="Events" />
+                </ListItem>
             </List>
         </div>
     );
@@ -82,6 +101,27 @@ function Layout({ children }) {
                     <Typography variant="h6" noWrap>
                         Event Planner
                     </Typography>
+                    <div style={{ flexGrow: 1 }} />
+                    <Button color="inherit" component={Link} to="/events" className={location.pathname === '/events' ? classes.activeLink : ''}>
+                        Events
+                    </Button>
+                    <Button color="inherit" component={Link} to="/create-event" className={location.pathname === '/create-event' ? classes.activeLink : ''}>
+                        Create Event
+                    </Button>
+                    {user ? (
+                        <Button color="inherit" onClick={logout}>
+                            Logout
+                        </Button>
+                    ) : (
+                        <>
+                            <Button color="inherit" component={Link} to="/signup" className={location.pathname === '/signup' ? classes.activeLink : ''}>
+                                Signup
+                            </Button>
+                            <Button color="inherit" component={Link} to="/login" className={location.pathname === '/login' ? classes.activeLink : ''}>
+                                Login
+                            </Button>
+                        </>
+                    )}
                 </Toolbar>
             </AppBar>
             <Drawer

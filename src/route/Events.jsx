@@ -14,6 +14,7 @@ import {
     Box
 } from '@material-ui/core';
 import EventCard from '../components/EventCard';
+import axios from 'axios';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -30,26 +31,34 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-const EventsPage = () => {
+const EventsPage = ({ user }) => {
     const classes = useStyles();
     const history = useHistory();
     const [events, setEvents] = useState([]);
 
     useEffect(() => {
         const fetchEvents = async () => {
-            try {
-                const response = await fetch('http://localhost:3000/event');
-                const data = await response.json();
-                const sortedEvents = data.sort((a, b) => {
-                    return new Date(a.date) - new Date(b.date);
-                });
-                setEvents(sortedEvents);
-            } catch (error) {
-                console.error(error);
+            if (user) {
+                try {
+                    const userEventsId = [...new Set((await axios.get(`http://localhost:3000/user/${user._id}/events`)).data)];
+
+                    await axios.post('http://localhost:3000/event/relevant', { userEventsId })
+                        .then(({ data }) => {
+                            const sortedEvents = data.sort((a, b) => {
+                                return new Date(a.date) - new Date(b.date);
+                            });
+                            setEvents(sortedEvents);
+
+                        })
+                        .catch(error => console.error(error));
+                } catch (error) {
+                    console.error(error);
+                }
             }
+
         };
         fetchEvents();
-    }, []);
+    }, [user]);
 
     const handleEventClick = (eventId) => {
         history.push(`/event/${eventId}`);
