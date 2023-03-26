@@ -3,17 +3,18 @@ import { useParams } from "react-router-dom";
 import {
     Avatar,
     Button,
-    FormControl,
+    Box,
     FormGroup,
     Grid,
     IconButton,
     Paper,
     Typography,
+    Tooltip
 } from "@material-ui/core";
 import { Add as AddIcon, Remove as RemoveIcon } from "@material-ui/icons";
 import { makeStyles } from "@material-ui/core/styles";
 import axios from "axios";
-import { green } from "@material-ui/core/colors";
+import { blue, green, orange, purple, red } from "@material-ui/core/colors";
 import { deepOrange } from "@material-ui/core/colors";
 
 function trimText(text) {
@@ -25,6 +26,11 @@ function trimText(text) {
         return text;
     }
 }
+const getRandomColor = () => {
+    const colors = [red[500], blue[500], green[500], purple[500], orange[500]];
+    return colors[Math.floor(Math.random() * colors.length)];
+};
+
 const useStyles = makeStyles((theme) => ({
     root: {
         padding: theme.spacing(4),
@@ -54,6 +60,12 @@ const useStyles = makeStyles((theme) => ({
         width: "100vw",
         backgroundColor: theme.palette.background.default,
     },
+    avatar: {
+        height: theme.spacing(1.5),
+        width: theme.spacing(1.5),
+        fontSize: theme.typography.caption.fontSize,
+        marginRight: theme.spacing(0.5),
+    },
 }));
 
 const EventPage = ({ currentUser }) => {
@@ -61,47 +73,46 @@ const EventPage = ({ currentUser }) => {
     const classes = useStyles();
     const [event, setEvent] = useState(null);
     const [selectedProducts, setSelectedProducts] = useState({});
-    const [productsExceedingQuantity, setProductsExceedingQuantity] = useState([]);
     const [error, setError] = useState(null);
 
+    // fetch the event data
     useEffect(() => {
         const fetchEvent = async () => {
             try {
-                console.log("fetchEvent");
                 const response = await axios.get(`http://localhost:3000/event/${id}`);
-                console.log("response", response);
                 setEvent(response.data);
             } catch (error) {
-                console.error(error);
                 setError("Event not found");
             }
         };
         fetchEvent();
     }, [id]);
 
+    // update the user selected products
     useEffect(() => {
         if (event) {
             const tempSelectedProducts = {};
             event.products.forEach((product) => {
                 tempSelectedProducts[product._id] = 0;
             });
+
+            // Check if user is in attendees list
+            const userAttendee = event.attendees.find(attendee => attendee._id === currentUser._id);
+            if (userAttendee) {
+                console.log(tempSelectedProducts);
+
+                // If user is already in attendees list, update the quantity for selected products
+                userAttendee.products
+                    .forEach(product => {
+                        console.log("productId", product);
+                        tempSelectedProducts[`${product.productId}`] = product.quantity;
+
+                    });
+            }
             setSelectedProducts(tempSelectedProducts);
         }
-    }, [event]);
+    }, [event, currentUser]);
 
-    useEffect(() => {
-        const tempProductsExceedingQuantity = [];
-        event?.products?.forEach((product) => {
-            const selectedQuantity = selectedProducts[product._id] || 0;
-            if (
-                selectedQuantity > 0 &&
-                selectedQuantity + product.quantity > event.numberOfGuests
-            ) {
-                tempProductsExceedingQuantity.push(product.id);
-            }
-        });
-        setProductsExceedingQuantity(tempProductsExceedingQuantity);
-    }, [event, selectedProducts]);
 
     const isMaxQuantityReached = (productId, quantity) => {
         const product = event.products.find((product) => product._id === productId);
@@ -109,18 +120,10 @@ const EventPage = ({ currentUser }) => {
         return selectedQuantity + quantity > product.quantity;
     };
 
-    const canConfirm = () => {
-        const totalSelected = Object.values(selectedProducts).reduce(
-            (total, quantity) => total + quantity,
-            0
-        );
 
-        return (
-            // totalSelected >= event.numberOfGuests && productsExceedingQuantity.length === 0
-            true
-        );
-    };
-    console.log(selectedProducts);
+
+
+
     const handleProductChange = (productId, quantity) => {
         setSelectedProducts((prevState) => ({
             ...prevState,
@@ -137,6 +140,12 @@ const EventPage = ({ currentUser }) => {
         return total;
     };
 
+    const canConfirm = () => {
+        const totalPrice = calculateTotal();
+        const totalProductPrice = event.products.reduce((total, product) => { return total + product.price * product.quantity; }, 0);
+        const pricePerUser = totalProductPrice / event.numberOfGuests;
+        return (totalPrice > pricePerUser);
+    };
     const handleSubmit = async () => {
 
         try {
@@ -206,51 +215,86 @@ const EventPage = ({ currentUser }) => {
                         Available products:
                     </Typography>
                     <FormGroup className={classes.formControl}>
-                        {event.products.map((product) => (
-                            <div key={product._id} className={classes.product}>
-                                <Typography variant="subtitle1" gutterBottom>
-                                    {product.name} - {trimText(product.description, 30)}
-                                </Typography>
-                                <div>
-                                    <IconButton
-                                        aria-label="remove"
-                                        disabled={selectedProducts[product._id] === 0}
-                                        onClick={() =>
-                                            handleProductChange(
-                                                product._id,
-                                                selectedProducts[product._id] - 1
-                                            )
-                                        }
-                                    >
-                                        <RemoveIcon />
-                                    </IconButton>
-                                    <Avatar
-                                        style={{
-                                            backgroundColor: isMaxQuantityReached(
-                                                product._id,
-                                                1
-                                            )
-                                                ? deepOrange[500]
-                                                : green[500],
-                                        }}
-                                    >
-                                        {selectedProducts[product._id] || 0}
-                                    </Avatar>
-                                    <IconButton
-                                        aria-label="add"
-                                        disabled={isMaxQuantityReached(product._id, 1)}
-                                        onClick={() =>
-                                            handleProductChange(
-                                                product._id,
-                                                selectedProducts[product._id] + 1
-                                            )
-                                        }
-                                    >
-                                        <AddIcon />
-                                    </IconButton>
+                        {event.products.map((product) => {
+                            const attendeesWithProduct = event.attendees.filter((attendee) => {
+                                return attendee.products.find((attendeeProduct) => {
+                                    return attendeeProduct.productId === product._id;
+                                });
+                            });
+
+                            return (
+                                <div key={product._id} className={classes.product}>
+                                    <Typography variant="subtitle1" gutterBottom>
+                                        {product.name} - {trimText(product.description, 30)}
+                                    </Typography>
+                                    <Box display="flex" alignItems="center">
+                                        {attendeesWithProduct.map((attendee) => {
+                                            const attendeeProduct = attendee.products.find((attendeeProduct) => {
+                                                return attendeeProduct.productId === product._id;
+                                            });
+                                            if (attendeeProduct.quantity > 0) {
+                                                return (
+                                                    <Tooltip
+                                                        key={attendee._id}
+                                                        title={`${attendee.name} - ${attendeeProduct.quantity} ${attendeeProduct.quantity === 1 ? 'product' : 'products'
+                                                            }`}
+                                                    >
+                                                        <Avatar
+                                                            className={classes.avatar}
+                                                            style={{ backgroundColor: getRandomColor() }}
+                                                        >
+                                                            {attendee.name?.charAt(0)}
+                                                        </Avatar>
+                                                    </Tooltip>
+                                                );
+                                            }
+
+                                        })}
+                                        <Box display="flex" alignItems="center">
+                                            <IconButton
+                                                aria-label="remove"
+                                                disabled={selectedProducts[product._id] === 0}
+                                                onClick={() =>
+                                                    handleProductChange(
+                                                        product._id,
+                                                        selectedProducts[product._id] - 1
+                                                    )
+                                                }
+                                            >
+                                                <RemoveIcon />
+                                            </IconButton>
+                                            <Avatar
+                                                style={{
+                                                    backgroundColor: isMaxQuantityReached(
+                                                        product._id,
+                                                        1
+                                                    )
+                                                        ? deepOrange[500]
+                                                        : green[500],
+                                                }}
+                                            >
+                                                {selectedProducts[product._id] || 0}
+                                            </Avatar>
+                                            <IconButton
+                                                aria-label="add"
+                                                disabled={isMaxQuantityReached(product._id, 1)}
+                                                onClick={() =>
+                                                    handleProductChange(
+                                                        product._id,
+                                                        selectedProducts[product._id] + 1
+                                                    )
+                                                }
+                                            >
+                                                <AddIcon />
+                                            </IconButton>
+                                        </Box>
+                                    </Box>
                                 </div>
-                            </div>
-                        ))}
+                            );
+                        })}
+
+
+
                     </FormGroup>
                     <Grid container justifyContent="flex-end">
                         <Grid item xs={4}>
