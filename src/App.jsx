@@ -26,7 +26,7 @@ function App() {
   const history = useHistory();
 
   const [user, setUser] = useState(JSON.parse(localStorage.getItem('user')) || null);
-  const [isAuthenticated, setIsAuthenticated] = useState(user || false);
+  const [isAuthenticated, setIsAuthenticated] = useState(user !== null);
 
   useEffect(() => {
     const authToken = localStorage.getItem('authToken');
@@ -38,8 +38,11 @@ function App() {
         },
       })
         .then(response => {
-          setUser({ ...user, ...response.data.user });
+          const userData = { ...user, ...response.data.user };
+          setUser(userData);
+          console.log("userData");
           setIsAuthenticated(true); // set isAuthenticated to true
+          localStorage.setItem('user', JSON.stringify(userData));
         })
         .catch(error => {
           console.log(error);
@@ -53,7 +56,7 @@ function App() {
 
   return (
     <div className="App">
-      <Layout user={user} setUser={setUser}>
+      <Layout user={user} setUser={setUser} setIsAuthenticated={setIsAuthenticated}>
         <div className="main-content">
           <Switch>
             <Route exact path="/">
@@ -78,7 +81,7 @@ function App() {
               user={user}
             />
             <Route exact path="/login">
-              <Login />
+              <Login setUser={setUser}/>
             </Route>
             <Route exact path="/signup">
               <Signup />
@@ -92,5 +95,6 @@ function App() {
     </div>
   );
 }
+
 
 export default App;

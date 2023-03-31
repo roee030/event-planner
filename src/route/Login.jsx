@@ -20,7 +20,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-function Login() {
+function Login({ setUser }) {
     const classes = useStyles();
     const history = useHistory();
 
@@ -39,6 +39,7 @@ function Login() {
         axios.post('http://localhost:3000/auth/login', { username, password })
             .then(response => {
                 console.log(response);
+                setUser(response.data.user);
                 const token = response.data.token;
                 localStorage.setItem('authToken', token);
                 localStorage.setItem('user', JSON.stringify(response.data.user));

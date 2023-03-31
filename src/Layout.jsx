@@ -3,9 +3,8 @@ import { AppBar, Drawer, IconButton, List, ListItem, ListItemIcon, ListItemText,
 import { Menu as MenuIcon, Close as CloseIcon, Home as HomeIcon, Event as EventIcon, Add as AddIcon } from '@material-ui/icons';
 import { makeStyles } from '@material-ui/core/styles';
 import { Link, useLocation } from 'react-router-dom';
-import axios from 'axios';
 import { useHistory } from 'react-router-dom';
-
+import LogoutButton from './components/LogoutButton'
 const drawerWidth = 240;
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -42,7 +41,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-function Layout({ user, setUser, children }) {
+function Layout({ user, setUser, children, setIsAuthenticated }) {
     const classes = useStyles();
     const history = useHistory();
     const location = useLocation();
@@ -50,21 +49,6 @@ function Layout({ user, setUser, children }) {
 
     const handleDrawerToggle = () => {
         setOpen(!open);
-    };
-    const logout = () => {
-        axios.get('http://localhost:3000/auth/logout')
-            .then(() => {
-                // Remove token from local storage
-                localStorage.removeItem('authToken');
-                localStorage.removeItem('user');
-                setUser(null);
-            })
-            .catch((error) => {
-                console.error(error);
-            });
-
-        history.push('/login');
-
     };
 
     const drawer = (
@@ -109,9 +93,7 @@ function Layout({ user, setUser, children }) {
                         Create Event
                     </Button>
                     {user ? (
-                        <Button color="inherit" onClick={logout}>
-                            Logout
-                        </Button>
+                        <LogoutButton setUser={setUser} setIsAuthenticated={setIsAuthenticated} />
                     ) : (
                         <>
                             <Button color="inherit" component={Link} to="/signup" className={location.pathname === '/signup' ? classes.activeLink : ''}>

@@ -20,29 +20,34 @@ const useStyles = makeStyles({
 
 const EventCard = ({ event }) => {
     const classes = useStyles();
+    console.log(event);
+    if (event) {
+        return (
 
-    return (
-        <Card className={classes.root}>
-            <CardActionArea>
-                <CardMedia
-                    className={classes.media}
-                    image={event.image}
-                    title={event.title}
-                />
-                <CardContent>
-                    <Typography gutterBottom variant="h5" component="h2">
-                        {event.title}
-                    </Typography>
-                    <Typography variant="body2" color="textSecondary" component="p">
-                        {event.date.toLocaleString()}
-                    </Typography>
-                    <Typography variant="body2" color="textSecondary" component="p">
-                        {event.location}
-                    </Typography>
-                </CardContent>
-            </CardActionArea>
-        </Card>
-    );
+            <Card className={classes.root}>
+                <CardActionArea>
+                    <CardMedia
+                        className={classes.media}
+                        image={event?.image}
+                        title={event?.title}
+                    />
+                    <CardContent>
+                        <Typography gutterBottom variant="h5" component="h2">
+                            {event?.title}
+                        </Typography>
+                        <Typography variant="body2" color="textSecondary" component="p">
+                            {event?.date.toLocaleString()}
+                        </Typography>
+                        <Typography variant="body2" color="textSecondary" component="p">
+                            {event.location}
+                        </Typography>
+                    </CardContent>
+                </CardActionArea>
+            </Card>
+
+
+        );
+    }
 };
 
 export default EventCard;
