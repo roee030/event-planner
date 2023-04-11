@@ -32,7 +32,6 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const EventsPage = ({ user }) => {
-
     const classes = useStyles();
     const history = useHistory();
     const [events, setEvents] = useState([]);

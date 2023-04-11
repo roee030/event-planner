@@ -119,11 +119,16 @@ const EventPage = ({ currentUser }) => {
     const isMaxQuantityReached = (productId, quantity) => {
         const product = event.products.find((product) => product._id === productId);
         const selectedQuantity = selectedProducts[productId] || 0;
-        return selectedQuantity + quantity > product.quantity;
+        const productSelectedCount = event.attendees.reduce(
+            (count, attendee) =>
+                count +
+                (attendee.products.find(
+                    (product) => product.productId === productId
+                )?.quantity || 0),
+            0
+        );
+        return selectedQuantity + productSelectedCount + quantity > product.quantity;
     };
-
-
-
 
 
     const handleProductChange = (productId, quantity) => {
@@ -146,8 +151,9 @@ const EventPage = ({ currentUser }) => {
         const totalPrice = calculateTotal();
         const totalProductPrice = event.products.reduce((total, product) => { return total + product.price * product.quantity; }, 0);
         const pricePerUser = totalProductPrice / event.numberOfGuests;
-        return (totalPrice > pricePerUser);
+        return (totalPrice >= pricePerUser);
     };
+
     const handleSubmit = async () => {
         try {
             const existingAttendeeIndex = event.attendees.findIndex(

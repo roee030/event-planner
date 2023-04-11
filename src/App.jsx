@@ -40,7 +40,6 @@ function App() {
         .then(response => {
           const userData = { ...user, ...response.data.user };
           setUser(userData);
-          console.log("userData");
           setIsAuthenticated(true); // set isAuthenticated to true
           localStorage.setItem('user', JSON.stringify(userData));
         })
@@ -81,10 +80,10 @@ function App() {
               user={user}
             />
             <Route exact path="/login">
-              <Login setUser={setUser}/>
+              <Login setUser={setUser} setIsAuthenticated={setIsAuthenticated} />
             </Route>
             <Route exact path="/signup">
-              <Signup />
+              <Signup setUser={setUser} setIsAuthenticated={setIsAuthenticated} />
             </Route>
             <Route>
               <NotFound />

@@ -14,7 +14,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export default function Signup() {
+export default function Signup({ setUser, setIsAuthenticated }) {
     const classes = useStyles();
     const history = useHistory();
     const [username, setUsername] = useState('');
@@ -29,13 +29,17 @@ export default function Signup() {
             setError('Passwords do not match');
             return;
         }
-
-        axios.post('http://localhost:3000/auth/signup', { username, password, email })
-            .then(() => {
+        axios.post('http://localhost:3000/auth/signup', { username, password, email }, { withCredentials: true })
+            .then((response) => {
+                const { token, user } = response.data;
+                setIsAuthenticated(true);
+                setUser(response.data.user);
+                localStorage.setItem('user', JSON.stringify(user));
+                localStorage.setItem('authToken', JSON.stringify(token));
                 history.push('/');
             })
             .catch((err) => {
-                setError(err.response.data.message);
+                setError(err.response);
             });
     };
 

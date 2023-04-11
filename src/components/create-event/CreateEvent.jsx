@@ -30,15 +30,18 @@ function CreateEvent({ user }) {
     const handleBack = () => {
         setActiveStep(activeStep - 1);
     };
+
     const handleCreateEvent = async (eventData) => {
         setLoading(true);
         try {
             const response = await axios.post('http://localhost:3000/event', { ...eventData, user: user });
+            await axios.put(`http://localhost:3000/user/${user._id}/event/${response.data._id}`);
             setEventId(response.data._id);
-            setLoading(false);
         } catch (err) {
             setIsError(true);
+        } finally {
             setLoading(false);
+
         }
     };
     const handleEventDetailsSubmit = async () => {

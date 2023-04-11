@@ -20,7 +20,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-function Login({ setUser }) {
+function Login({ setUser, setIsAuthenticated }) {
     const classes = useStyles();
     const history = useHistory();
 
@@ -40,6 +40,7 @@ function Login({ setUser }) {
             .then(response => {
                 console.log(response);
                 setUser(response.data.user);
+                setIsAuthenticated(true);
                 const token = response.data.token;
                 localStorage.setItem('authToken', token);
                 localStorage.setItem('user', JSON.stringify(response.data.user));
